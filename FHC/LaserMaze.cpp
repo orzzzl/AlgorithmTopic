@@ -1,9 +1,28 @@
-#include <bits/stdc++.h>
+//#include <regex>
+#include <queue>
+#include <iostream>
+#include <cstring>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <utility>
+#include <set>
+#include <map>
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <stack>
+#include <cstdio>
+#include <utility>
+#include <set>
+//#include <unordered_set>
+#include <climits>
+//#include <unordered_map>
 #include <tuple>
 using namespace std;
 #define MM 1000000007
 #define MT make_tuple
- 
+
 int x[105][105];
 int N, M;
 int sx, sy, ex, ey;
@@ -23,7 +42,7 @@ void main2() {
             if (s[j - 1] == '.') x[i][j] = 0;
             if (s[j - 1] == 'S') {
                 x[i][j] = 0;
-                sx = i; sy = j;                
+                sx = i; sy = j;
             }
             if (s[j - 1] == 'G') {
                 x[i][j] = 0;
@@ -38,73 +57,73 @@ void main2() {
     for (int i = 1; i <= N; i++) {
         for (int j = 1; j <= M; j++) {
             if (x[i][j] == -2) {
-                for (int k = i - 1; k >= 1 && x[k][j] >= 0; k--) {
+                for (int k = i - 1; x[k][j] >= 0; k--) {
                     x[k][j] *= 10;
                     x[k][j] += 1;
                 }
-                for (int k = j + 1; k <= M && x[i][k] >= 0; k++) {
+                for (int k = j + 1; x[i][k] >= 0; k++) {
                     x[i][k] *= 10;
                     x[i][k] += 2;
                 }
-                for (int k = i + 1; k <= N && x[k][j] >= 0; k++) {
+                for (int k = i + 1; x[k][j] >= 0; k++) {
                     x[k][j] *= 10;
                     x[k][j] += 3;
                 }
-                for (int k = j - 1; k >= 1 && x[i][k] >= 0; k--) {
+                for (int k = j - 1; x[i][k] >= 0; k--) {
                     x[i][k] *= 10;
                     x[i][k] += 4;
                 }
             }
             if (x[i][j] == -3) {
-                for (int k = i - 1; k >= 1 && x[k][j] >= 0; k--) {
+                for (int k = i - 1; x[k][j] >= 0; k--) {
                     x[k][j] *= 10;
                     x[k][j] += 4;
                 }
-                for (int k = j + 1; k <= M && x[i][k] >= 0; k++) {
+                for (int k = j + 1; x[i][k] >= 0; k++) {
                     x[i][k] *= 10;
                     x[i][k] += 1;
                 }
-                for (int k = i + 1; k <= M && x[k][j] >= 0; k++) {
+                for (int k = i + 1; x[k][j] >= 0; k++) {
                     x[k][j] *= 10;
                     x[k][j] += 2;
                 }
-                for (int k = j - 1; k >= 1 && x[i][k] >= 0; k--) {
+                for (int k = j - 1; x[i][k] >= 0; k--) {
                     x[i][k] *= 10;
                     x[i][k] += 3;
                 }
             }
             if (x[i][j] == -4) {
-                for (int k = i - 1; k >= 1 && x[k][j] >= 0; k--) {
+                for (int k = i - 1; x[k][j] >= 0; k--) {
                     x[k][j] *= 10;
                     x[k][j] += 3;
                 }
-                for (int k = j + 1; k <= M && x[i][k] >= 0; k++) {
+                for (int k = j + 1; x[i][k] >= 0; k++) {
                     x[i][k] *= 10;
                     x[i][k] += 4;
                 }
-                for (int k = i + 1; k <= M && x[k][j] >= 0; k++) {
+                for (int k = i + 1; x[k][j] >= 0; k++) {
                     x[k][j] *= 10;
                     x[k][j] += 1;
                 }
-                for (int k = j - 1; k >= 1 && x[i][k] >= 0; k--) {
+                for (int k = j - 1; x[i][k] >= 0; k--) {
                     x[i][k] *= 10;
                     x[i][k] += 2;
                 }
             }
             if (x[i][j] == -5) {
-                for (int k = i - 1; k >= 1 && x[k][j] >= 0; k--) {
+                for (int k = i - 1; x[k][j] >= 0; k--) {
                     x[k][j] *= 10;
                     x[k][j] += 2;
                 }
-                for (int k = j + 1; k <= M && x[i][k] >= 0; k++) {
+                for (int k = j + 1; x[i][k] >= 0; k++) {
                     x[i][k] *= 10;
                     x[i][k] += 3;
                 }
-                for (int k = i + 1; k <= M && x[k][j] >= 0; k++) {
+                for (int k = i + 1; x[k][j] >= 0; k++) {
                     x[k][j] *= 10;
                     x[k][j] += 4;
                 }
-                for (int k = j - 1; k >= 1 && x[i][k] >= 0; k--) {
+                for (int k = j - 1; x[i][k] >= 0; k--) {
                     x[i][k] *= 10;
                     x[i][k] += 1;
                 }
@@ -113,24 +132,28 @@ void main2() {
     }
     queue<tuple<int, int, int> > Q;
     Q.push(MT(sx, sy, 0));
+    vis[sx][sy][0] = true;
     while (!Q.empty()) {
         int cx = get<0>(Q.front()), cy = get<1>(Q.front()), cs = get<2>(Q.front()); Q.pop();
         for (int t = 0; t < 4; t++) {
             int nx = cx + dx[t], ny = cy + dy[t], ns = cs + 1;
-            if (nx < 1 || nx > N || ny < 1 || ny > M || vis[nx][ny][ns % 4]) continue;
+            if (vis[nx][ny][ns % 4]) continue;
             if (x[nx][ny] < 0) continue;
             int cur = x[nx][ny];
             bool flag = false;
             while (cur > 0) {
                 int tmp = cur % 10;
-                if (ns % 4 == tmp - 1) {
+                if (tmp < 1 || tmp > 4) {
+                    cout << "error" << endl;
+                    return;
+                }
+                if ((ns % 4) == tmp - 1) {
                     flag = true;
                     break;
                 }
                 cur /= 10;
             }
             if (flag) continue;
-           // cout << nx << " " << ny << " " << ns << " " << x[nx][ny] << endl;;
             vis[nx][ny][ns % 4] = true;
             Q.push(MT(nx, ny, ns));
             if (nx == ex && ny == ey) ans = min(ans, ns);
@@ -141,12 +164,12 @@ void main2() {
 }
 
 int main () {
-//    if (fopen("/home/ubuntu/workspace/inzzz", "r")) freopen("/home/ubuntu/workspace/inzzz", "r", stdin);
-   // if (fopen("/home/ubuntu/workspace/outzzz", "w")) freopen("/home/ubuntu/workspace/outzzz2", "w", stdout);
+    if (fopen("/Users/zelengzhuang/Desktop/in", "r")) freopen("/Users/zelengzhuang/Desktop/in", "r", stdin);
+    if (fopen("/Users/zelengzhuang/Desktop/out", "w")) freopen("/Users/zelengzhuang/Desktop/out", "w", stdout);
     int T;
     cin >> T;
     for (int i = 1; i <= T; i++) {
-        cerr << i << endl;
+        //cerr << i << endl;
         printf("Case #%d: ", i);
         main2();
         if (i < T) printf("\n");
