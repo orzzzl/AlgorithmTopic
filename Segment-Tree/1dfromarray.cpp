@@ -46,3 +46,21 @@ int query (node *root, int start, int end) {
     }
     return 0;
 }
+
+void add(node *root, int target, int val) {
+    if (target > root->end || target < root->start || root == NULL) {
+        return;
+    }
+    if (root->start == root->end && root->start == target) {
+        root->sum = val;
+        return;
+    }
+    int mid = root->start + (root->end - root->start) / 2;
+    if (target > mid && target <= root->end) {
+        add(root->right, target, val);
+    }  
+    if (target >= root->start && target <= mid) {
+        add(root->left, target, val);
+    }
+    root->sum = root->left->sum + root->right->sum;
+}
