@@ -1,88 +1,51 @@
 #include<iostream>
 #include<vector>
 #include<string>
+#include<cstdio>
+#include<algorithm>
 #include<climits>
 #include<unordered_map>
 using namespace std;
-int K, N;
-string buf;
+const int inf = (int)1e9;
 vector<string> x;
+vector<vector<int> > dp;
+vector<int> lcp;
 
-struct TrieNode {
-    unordered_map<char, TrieNode*> rec;
-    TrieNode() { 
-    }
-};
-
-struct Trie {
-    TrieNode* root;
-    Trie() {
-        root = new TrieNode();
-    }
-    void insert(string word) {
-        auto cur = root;
-        for (auto i : word) {
-            if (cur->rec.find(i) == cur->rec.end()) {
-                cur->rec[i] = new TrieNode();
-            }
-            cur = cur->rec[i];
-        }
-    }
-    int get_ind(string prefix) {
-        auto cur = root;
-        int cnt = 0;
-        for (auto i : prefix) {
-            if (cur->rec.find(i) == cur->rec.end()) {
-                return cnt;
-            }
-            cur = cur->rec[i];
-            cnt++;
-        }
-        return cnt;
-    }
-};
-
+int N, K;
 void main2() {
-    scanf("%d%d", &N, &K);
-    x.clear();
-    for (int i = 0; i < N; i++) {
-        cin >> buf;
-        x.push_back(buf);
-    }
-    int ans = INT_MAX;
-    for (int start = 0; start < N; start++) {
-        Trie task;
-        task.insert(x[start]);
-        int cnt = 1;
-        int cost = x[start].size();
-        vector<bool> vis(N, false);
-        vis[start] = true;
-        while (cnt < K) {
-            int min_val = INT_MAX, ind = -1;
-            for (int k = 0; k < N; k++) {
-                if (vis[k]) continue;
-                int match = task.get_ind(x[k]);
-                int val = x[k].size() - match;
-                if (val < min_val) {
-                    min_val = val;
-                    ind = k;
-                }
-            }
-            vis[ind] = true;
-            task.insert(x[ind]);
-            cost += min_val;
-            cnt++;
-        }
-        ans = min(ans, cost);
-    }
-    printf("%d\n", 2 * ans + K);
+  x.clear();
+  cin >> N >> K;
+  for (int i = 0; i < N; i++) {
+    string tp; cin >> tp; x.push_back(tp);
+  }
+  dp = vector<vector<int> >(N + 5, vector<int>(K + 5, inf));
+  lcp = vector<int>(N + 5, 0);
+  sort(x.begin(), x.end());
+  for (int i = 0; i < N - 1; i++) {
+    int cnt = 0;
+    for (int k = 0; k < x[i].size() and k < x[i + 1].size() and x[i][k] == x[i + 1][k]; k++, cnt++);
+    lcp[i] = cnt;
+  }
+  int lcpsum[N + 5][N + 5];
+  for (int i = 0; i < N - 1; i++) {
+    lcpsum[i][i] = lcp[i];
+    for (int j = i + 1; j < N - 1; j++) lcpsum[i][j] = min(lcp[j], lcpsum[i][j - 1]);
+  }
+  for (int i = 0; i < N; i++) dp[i][1] = x[i].size();
+  for (int k = 2; k <= K; k++) {
+    for (int i = 0; i < N; i++) for (int j = i + 1; j < N; j++) 
+      dp[j][k] = min(dp[j][k], (int)x[j].size() + (int)x[i].size() - 2 * (lcpsum[i][j - 1]) + dp[i][k - 1]);
+  }
+  int ans = inf;
+  for (int i = 0; i < N; i++) ans = min(ans, dp[i][K] + (int)x[i].size());
+  cout << ans + K << endl;
 }
 
 int main () {
-    int T; scanf("%d", &T);
-    for (int i = 1; i <= T; i++) {
-        printf("Case #%d: ", i);
-        main2();
+  int T; scanf("%d", &T);
+  for (int i = 1; i <= T; i++) {
+    printf("Case #%d: ", i);
+      main2();
     }
-    return 0;
+  return 0;
 }
