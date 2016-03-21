@@ -1,0 +1,22 @@
+bool is_bipartite(int start, int N) {
+    vector<int> color(N + 5, -1);
+    color[start] = 0;
+    queue<int> Q;
+    Q.push(start);
+    while (Q.empty() == false) {
+        int cur = Q.front();
+        Q.pop();
+        for (int k = 0; k < adj[cur].size(); k++) {
+            int ele = adj[cur][k];
+            if (color[ele] == -1) {
+                color[ele] = 1 - color[cur];
+                Q.push(ele);
+            } else {
+                if (color[ele] == color[cur]) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
