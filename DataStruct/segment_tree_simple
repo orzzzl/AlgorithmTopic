@@ -4,9 +4,11 @@ int N;
 
 struct seg {
     int start, end;
+    seg() {}
 };
 
-seg merge(const seg &lft, const seg &rgt) {
+inline seg merge(const seg &lft, const seg &rgt) {
+
 }
 
 seg x[4 * mx];
@@ -14,11 +16,7 @@ seg x[4 * mx];
 void build(int pos, int start, int end) {
     if (start > end) return;
     if (start == end) {
-        if (s[start - 1] == ')') {
-            x[pos] = seg(0, 0, 1);
-        } else {
-            x[pos] = seg(0, 1, 0);
-        }
+        // do something
     } else {
         int mid = start + (end - start) / 2;
         build(pos * 2, start, mid);
