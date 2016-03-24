@@ -1,0 +1,14 @@
+int x[MX];
+
+void add(int k, int v) {
+	k++;
+	for (; k < MX; k += -k&k) x[k] += v;
+}
+
+int get(int k) {
+	if (k < 0) return 0;
+	k++;
+	int ans = 0;
+	for (; k; k -= -k&k) ans += x[k];
+	return ans;
+}
