@@ -1,28 +1,3 @@
-#include <iostream>
-#include <cstdio>
-#include <cmath>
-#include <cstring>
-#include <algorithm>
-#include <string>
-#include <vector>
-#include <stack>
-#include <queue>
-#include <set>
-#include <map>
-#include <sstream>
-#include <complex>
-#include <ctime>
-#include <cassert>
-#include <functional>
-void setting() {
-	if (fopen("C:\\Users\\zhuan\\Desktop\\inzz.txt","r"))freopen("C:\\Users\\zhuan\\Desktop\\inzz.txt", "r", stdin);
-	if (fopen("C:\\Users\\zhuan\\Desktop\\outzz.txt","w"))freopen("C:\\Users\\zhuan\\Desktop\\outzz.txt", "w", stdout);
-}
-
-using namespace std;
-
-typedef long long ll;
-
 const int mx = 1000005;
 string s;
 int N, Q;
@@ -30,14 +5,11 @@ int N, Q;
 struct seg {
 	int start, end;
 	int put;
-	int one, zero;
 	seg() {
 		start = end = -1;
 		put = 0;
 	}
-	seg(int a, int b) {
-		one = a;
-		zero = b;
+	seg() {
 		start = -1;
 		end = -1;
 		put = 0;
@@ -45,10 +17,6 @@ struct seg {
 };
 
 inline seg merge(const seg &lft, const seg &rgt) {
-	seg ans = seg(lft.one + rgt.one, lft.zero + rgt.zero);
-	ans.start = lft.start;
-	ans.end = rgt.end;
-	return ans;
 }
 
 seg x[4 * mx];
@@ -57,8 +25,6 @@ void build(int pos, int start, int end) {
 	if (start > end) return;
 	if (start == end) {
 		// do something
-		x[pos] = seg(0, 1);
-		x[pos].put = 0;
 	}
 	else {
 		int mid = start + (end - start) / 2;
@@ -73,12 +39,7 @@ void build(int pos, int start, int end) {
 
 inline void push(int pos) {
 	if (x[pos].put) {
-		swap(x[pos * 2].one, x[pos * 2].zero);
-		swap(x[pos * 2 + 1].one, x[pos * 2 + 1].zero);
-		x[pos * 2].put++;
-		x[pos * 2].put %= 2;
-		x[pos * 2 + 1].put++;
-		x[pos * 2 + 1].put %= 2;
+	//do something
 		x[pos].put = 0;
 	}
 }
@@ -86,9 +47,7 @@ inline void push(int pos) {
 void modify(int pos, int start, int end) {
 	if (x[pos].end < start || x[pos].start > end) return;
 	if (x[pos].start >= start && x[pos].end <= end) {
-		swap(x[pos].one, x[pos].zero);
-		x[pos].put++;
-		x[pos].put %= 2;
+		// do something
 		return;
 	}
 	push(pos);
@@ -117,19 +76,4 @@ seg query(int pos, int start, int end) {
 	else return merge(query(pos * 2, start, mid), query(pos * 2 + 1, mid + 1, end)); // go both and merge
 }
 
-int main() {
-	setting();
-	cin >> N >> Q;
-	build(1, 0, N - 1);
-	while (Q--) {
-		int t, a, b;
-		scanf("%d%d%d", &t, &a, &b);
-		if (t == 1) {
-			printf("%d\n", query(1, a, b).one);
-		}
-		else {
-			modify(1, a, b);
-		}
-	}
-}
 
