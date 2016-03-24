@@ -50,7 +50,7 @@ void modify(int pos, int start, int end) {
 		return;
 	}
 	push(pos);
-	int mid = (x[pos].start + x[pos].end) >> 1;
+	int mid = x[pos].start + (x[pos].end - x[pos].start) / 2;
 	if (mid >= end) modify(pos * 2, start, end);
 	else if (mid < start) modify(pos * 2 + 1, start, end);
 	else if (mid >= start && mid < end) {
