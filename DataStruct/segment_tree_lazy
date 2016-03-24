@@ -1,5 +1,4 @@
 const int mx = 1000005;
-string s;
 int N, Q;
 
 struct seg {
