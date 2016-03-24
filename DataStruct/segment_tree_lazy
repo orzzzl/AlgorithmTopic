@@ -69,7 +69,7 @@ seg query(int pos, int start, int end) {
 	// found
 	if (start <= seg_start && end >= seg_end) return x[pos];
 	push(pos);
-	int mid = (seg_start + seg_end) / 2;
+	int mid = seg_start + (seg_end - seg_start) / 2;
 	if (mid >= end) return query(pos * 2, start, end); // go left
 	else if (mid < start) return query(pos * 2 + 1, start, end); // go right
 	else return merge(query(pos * 2, start, mid), query(pos * 2 + 1, mid + 1, end)); // go both and merge
