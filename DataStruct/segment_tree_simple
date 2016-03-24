@@ -3,8 +3,8 @@ string s;
 int N;
 
 struct seg {
-    int start, end;
-    seg() {}
+	int start, end;
+	seg() {}
 };
 
 inline seg merge(const seg &lft, const seg &rgt) {
@@ -14,31 +14,31 @@ inline seg merge(const seg &lft, const seg &rgt) {
 seg x[4 * mx];
 
 void build(int pos, int start, int end) {
-    if (start > end) return;
-    if (start == end) {
-        // do something
-    } else {
-        int mid = start + (end - start) / 2;
-        build(pos * 2, start, mid);
-        build(pos * 2 + 1, mid + 1, end);
-        x[pos] = merge(x[pos * 2], x[pos * 2 + 1]);
-    }
-    x[pos].start = start;
-    x[pos].end = end;
+	if (start > end) return;
+	if (start == end) {
+		// do something
+	}
+	else {
+		int mid = start + (end - start) / 2;
+		build(pos * 2, start, mid);
+		build(pos * 2 + 1, mid + 1, end);
+		x[pos] = merge(x[pos * 2], x[pos * 2 + 1]);
+	}
+	x[pos].start = start;
+	x[pos].end = end;
 }
 
 seg query(int pos, int start, int end) {
-    int seg_start = x[pos].start, seg_end = x[pos].end;
+	int seg_start = x[pos].start, seg_end = x[pos].end;
 
-    //invalid input
-    if (start > end or end < seg_start or start > seg_end) return seg(0, 0, 0);
+	//invalid input
+	if (start > end || end < seg_start || start > seg_end) return seg(0, 0, 0);
 
-    // found
-    if (start == seg_start and end == seg_end) return x[pos];
-    
-    int mid = (seg_start + seg_end) / 2;
-    if (mid >= end) return query(pos * 2, start, end); // go left
-    else if (mid < start) return query(pos * 2 + 1, start, end); // go right
-    else return merge(query(pos * 2, start, mid), query(pos * 2 + 1, mid + 1, end)); // go both and merge
+	// found
+	if (start == seg_start && end == seg_end) return x[pos];
+
+	int mid = (seg_start + seg_end) / 2;
+	if (mid >= end) return query(pos * 2, start, end); // go left
+	else if (mid < start) return query(pos * 2 + 1, start, end); // go right
+	else return merge(query(pos * 2, start, mid), query(pos * 2 + 1, mid + 1, end)); // go both and merge
 }
-
