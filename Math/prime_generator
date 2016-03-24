@@ -1,0 +1,13 @@
+const int mx = 1000000;
+vector<int> primes;
+bool p[mx + 5];
+
+void pre() {
+	memset(p, true, sizeof p);
+	for (int i = 2; i <= mx; i++) {
+		if (p[i]) {
+			primes.push_back(i);
+			for (int j = i + i; j <= mx; j += i) p[j] = false;
+		}
+	}
+}
