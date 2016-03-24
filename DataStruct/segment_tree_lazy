@@ -36,9 +36,18 @@ void build(int pos, int start, int end) {
 	x[pos].end = end;
 }
 
-inline void push(int pos) {
+inline void update(int pos, ll v) {
+	ll num = x[pos].end - x[pos].start + 1;
+	x[pos].sum += num * (ll)v;
+	x[pos].put += (ll)v;
+}
+
+
+inline void push(ll pos) {
 	if (x[pos].put) {
-	//do something
+		//do something
+		update(pos * 2, x[pos].put);
+		update(pos * 2 + 1, x[pos].put);
 		x[pos].put = 0;
 	}
 }
@@ -46,7 +55,7 @@ inline void push(int pos) {
 void modify(int pos, int start, int end) {
 	if (x[pos].end < start || x[pos].start > end) return;
 	if (x[pos].start >= start && x[pos].end <= end) {
-		// do something
+		update(pos, v);
 		return;
 	}
 	push(pos);
