@@ -1,0 +1,135 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <cstring>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <set>
+#include <map>
+#include <sstream>
+#include <complex>
+#include <ctime>
+#include <cassert>
+#include <functional>
+void setting() {
+	if (fopen("C:\\Users\\zhuan\\Desktop\\inzz.txt","r"))freopen("C:\\Users\\zhuan\\Desktop\\inzz.txt", "r", stdin);
+	if (fopen("C:\\Users\\zhuan\\Desktop\\outzz.txt","w"))freopen("C:\\Users\\zhuan\\Desktop\\outzz.txt", "w", stdout);
+}
+
+using namespace std;
+
+typedef long long ll;
+
+const int mx = 1000005;
+string s;
+int N, Q;
+
+struct seg {
+	int start, end;
+	int put;
+	int one, zero;
+	seg() {
+		start = end = -1;
+		put = 0;
+	}
+	seg(int a, int b) {
+		one = a;
+		zero = b;
+		start = -1;
+		end = -1;
+		put = 0;
+	}
+};
+
+inline seg merge(const seg &lft, const seg &rgt) {
+	seg ans = seg(lft.one + rgt.one, lft.zero + rgt.zero);
+	ans.start = lft.start;
+	ans.end = rgt.end;
+	return ans;
+}
+
+seg x[4 * mx];
+
+void build(int pos, int start, int end) {
+	if (start > end) return;
+	if (start == end) {
+		// do something
+		x[pos] = seg(0, 1);
+		x[pos].put = 0;
+	}
+	else {
+		int mid = start + (end - start) / 2;
+		build(pos * 2, start, mid);
+		build(pos * 2 + 1, mid + 1, end);
+		x[pos] = merge(x[pos * 2], x[pos * 2 + 1]);
+		x[pos].put = 0;
+	}
+	x[pos].start = start;
+	x[pos].end = end;
+}
+
+inline void push(int pos) {
+	if (x[pos].put) {
+		swap(x[pos * 2].one, x[pos * 2].zero);
+		swap(x[pos * 2 + 1].one, x[pos * 2 + 1].zero);
+		x[pos * 2].put++;
+		x[pos * 2].put %= 2;
+		x[pos * 2 + 1].put++;
+		x[pos * 2 + 1].put %= 2;
+		x[pos].put = 0;
+	}
+}
+
+void modify(int pos, int start, int end) {
+	if (x[pos].end < start || x[pos].start > end) return;
+	if (x[pos].start >= start && x[pos].end <= end) {
+		swap(x[pos].one, x[pos].zero);
+		x[pos].put++;
+		x[pos].put %= 2;
+		return;
+	}
+	push(pos);
+	int mid = (x[pos].start + x[pos].end) >> 1;
+	if (mid >= end) modify(pos * 2, start, end);
+	else if (mid < start) modify(pos * 2 + 1, start, end);
+	else if (mid >= start && mid < end) {
+		modify(pos * 2, start, mid);
+		modify(pos * 2 + 1, mid + 1, end);
+	}
+	x[pos] = merge(x[pos * 2], x[pos * 2 + 1]);
+}
+
+seg query(int pos, int start, int end) {
+	int seg_start = x[pos].start, seg_end = x[pos].end;
+
+	//invalid input
+	if (start > end || end < seg_start || start > seg_end) return seg(0, 0);
+
+	// found
+	if (start <= seg_start && end >= seg_end) return x[pos];
+	push(pos);
+	int mid = (seg_start + seg_end) / 2;
+	if (mid >= end) return query(pos * 2, start, end); // go left
+	else if (mid < start) return query(pos * 2 + 1, start, end); // go right
+	else return merge(query(pos * 2, start, mid), query(pos * 2 + 1, mid + 1, end)); // go both and merge
+}
+
+int main() {
+	setting();
+	cin >> N >> Q;
+	build(1, 0, N - 1);
+	while (Q--) {
+		int t, a, b;
+		scanf("%d%d%d", &t, &a, &b);
+		if (t == 1) {
+			printf("%d\n", query(1, a, b).one);
+		}
+		else {
+			modify(1, a, b);
+		}
+	}
+}
+
