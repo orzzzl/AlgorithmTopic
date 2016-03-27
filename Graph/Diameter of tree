@@ -1,6 +1,7 @@
-int N, M;
+int N;
 vector<int> adj[MX];
-int f[MX];
+
+int u, max_val;
 
 void dfs(int root, int prev, int dist) {
     f[root] = dist;
@@ -10,20 +11,12 @@ void dfs(int root, int prev, int dist) {
     }
 }
 
-int get_diameter() {
-    memset(f, 0, sizeof f);
-    int root = 0;
-    dfs(root, -1, 0);
-    int u = root;
-    for (int i = 0; i < N; i++) {
-        if (f[i] > f[u]) u = i;
-    }
-    memset(f, 0, sizeof f);
+int get_diameter(int root) {
+    max_val = u = -1;
+    dfs(root, -1, 1);
     root = u;
-    dfs(root, -1, 0);
-    u = root;
-    for (int i = 0; i < N; i++) {
-        if (f[i] > f[u]) u = i;
-    }
-    return f[u];
+    max_val = u = -1;
+    dfs(root, -1, 1);
+    return max_val;
 }
+
