@@ -1,0 +1,35 @@
+struct dat {
+    ll a, b, c, d;
+    dat() {
+        a = b = c = 1LL;
+        d = 0LL;
+    }
+    dat mul(const dat &anu) {
+        dat ans;
+        ans.a = (a * anu.a % mod + b * anu.c % mod) % mod;
+        ans.b = (a * anu.b % mod + b * anu.d % mod) % mod;
+        ans.c = (c * anu.a % mod + d * anu.c % mod) % mod;
+        ans.d = (c * anu.b % mod + d * anu.d % mod) % mod;
+        return ans;
+    }
+};
+
+dat mulpow(dat a, ll b) {
+    if (b == 1) return a;
+    if (b == 2) return a.mul(a);
+    if (b % 2 == 1) return a.mul(mulpow(a, b - 1));
+    else {
+        dat ans = mulpow(a, b / 2);
+        return ans.mul(ans);
+    }
+}
+
+ll fib(ll n) {
+    if (n == 0) return 0LL;
+    if (n <= 2) return 1LL;
+    else {
+        dat bs;
+        dat ans = mulpow(bs, n - 1);
+        return ans.a;
+    }
+}
