@@ -1,0 +1,40 @@
+int N, M;
+vector<int> adj[2005];
+vector<int> disc, low, u;
+vector<int> st;
+int scccnt, now;
+
+void tarjan(int pos) {
+	disc[pos] = low[pos] = ++now;
+	st.push_back(pos);
+	for (auto ele : adj[pos]) {
+		if (disc[ele] == -1) {
+			tarjan(ele);
+			low[pos] = min(low[pos], low[ele]);
+		}
+		else if (u[ele] == -1) {
+			low[pos] = min(low[pos], disc[ele]);
+		}
+	}
+	if (low[pos] == disc[pos]) {
+		scccnt++;
+		while (true) {
+			int cur = st.back();
+			st.pop_back();
+			u[cur] = scccnt;
+			if (cur == pos) break;
+		}
+	}
+}
+
+
+void solve() {
+	disc.assign(N, -1);
+	low.assign(N, -1);
+	u.assign(N, -1);
+	now = scccnt = 0;
+	for (int i = 0; i < N; i++) {
+		if (disc[i] == -1) tarjan(i);
+	}
+	puts(scccnt == 1 ? "1" : "0");
+}
