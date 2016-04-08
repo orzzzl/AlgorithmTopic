@@ -1,0 +1,26 @@
+#define MX 20005
+
+int N, M;
+vector<pair<int, int> > adj[MX];
+
+int dijkstra(int start, int end) {
+    vector<int> dis(MX, INT_MAX);
+    dis[start] = 0;
+    priority_queue<pair<int, int> > Q;
+    Q.push(make_pair(0, start));
+    while (Q.empty() == false) {
+        pair<int, int> cur = Q.top();
+        cur.first *= -1;
+        Q.pop();
+        if (cur.first > dis[cur.second]) continue;
+        for (int i = 0; i < adj[cur.second].size(); i++) {
+            int nxt = adj[cur.second][i].first;
+            int cost = adj[cur.second][i].second;
+            if (cost + dis[cur.second] < dis[nxt]) {
+                dis[nxt]= cost + dis[cur.second];
+                Q.push(make_pair(-dis[nxt], nxt));
+            }
+        }
+     }
+     return dis[end];
+}
