@@ -1,0 +1,75 @@
+#include<iostream>
+#include<vector>
+#include<deque>
+using namespace std;
+struct Edge
+{
+    int to,length;
+};
+bool spfa(const int &beg,//出发点
+          const vector<vector<Edge> > &adjlist,//邻接表，通过传引用避免拷贝
+          vector<int> &dist,//出发点到各点的最短路径长度
+          vector<int> &path)//路径上到达该点的前一个点
+//C++习惯上函数异常返回非零值，未异常才返回0（想想main函数），因此出现负权回路返回1！
+//福利：这个函数没有调用任何全局变量，可以直接复制！
+{
+    const int &INF=0x7FFFFFFF,&NODE=adjlist.size();//用邻接表的大小传递顶点个数，减少参数传递
+    dist.assign(NODE,INF);//初始化距离为无穷大
+    path.assign(NODE,-1);//初始化路径为未知
+    deque<int> que(1,beg);//处理队列
+    vector<bool> flag(NODE,0);//标志数组，判断是否在队列中
+    vector<int> cnt(NODE,0);//记录各点入队次数，用于判断负权回路
+    dist[beg]=0;//出发点到自身路径长度为0
+    ++cnt[beg];//开始计数
+    flag[beg]=1;//入队
+    while(!que.empty())
+    {
+        const int now=que.front();//当前处理的点，由于后面被删除，不可定义成常量引用
+        que.pop_front();
+        flag[now]=0;//将该点拿出队列
+        for(int i=0; i!=adjlist[now].size(); ++i)//遍历所有与当前点有路径的点
+        {
+            const int &next=adjlist[now][i].to;//目标点，不妨定义成常量引用，稍稍快些
+            if(dist[now]<INF&&//若距离已知（否则下面右式计算结果必爆int），且
+                   //注：与运算先判断左式是否成立，若不成立则右式不会被判断
+                   dist[next]>dist[now]+adjlist[now][i].length)//优于当前值
+            {
+                dist[next]=dist[now]+adjlist[now][i].length;//更新
+                path[next]=now;//记录路径
+                if(!flag[next])//若未在处理队列中
+                {
+                    if(++cnt[next]==NODE)return 1;//计数后出现负权回路
+                    if(que.empty()||//空队列，或（或运算实现原理类似与运算）
+                           dist[next]<dist[que.front()])//优先级高于队首（SLF）
+                        que.push_front(next);//放在队首
+                    else que.push_back(next);//否则放在队尾
+                    flag[next]=1;//入队
+                }
+            }
+        }
+    }
+    return 0;
+}
+int main()
+{
+    int n_num,e_num,beg;//含义见下
+    cout<<"输入点数、边数、出发点：";
+    cin>>n_num>>e_num>>beg;
+    vector<vector<Edge> > adjlist(n_num,vector<Edge>());//默认初始化邻接表
+    for(int i=0,p; i!=e_num; ++i)
+    {
+        Edge tmp;
+        cout<<"输入第"<<i+1<<"条边的起点、终点、长度：";
+        cin>>p>>tmp.to>>tmp.length;
+        adjlist[p].push_back(tmp);
+    }
+    vector<int> dist,path;//用于接收最短路径长度及路径各点
+    if(spfa(beg,adjlist,dist,path))cout<<"图中存在负权回路\n";
+    else for(int i=0; i!=n_num; ++i)
+        {
+            cout<<beg<<"到"<<i<<"的最短距离为"<<dist[i]<<"，反向打印路径：";
+            for(int w=i; path[w]>=0; w=path[w])
+                cout<<w<<"<-";
+            cout<<beg<<'\n';
+        }
+}
