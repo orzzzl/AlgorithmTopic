@@ -1,0 +1,24 @@
+#define MX 2005
+int N, M;
+const int inf = (int)1e8;
+tuple<int, int, int> edges[MX];
+
+
+bool have_negative_cycle() {
+    int dis[MX];
+    for (int i = 0; i < N; i++) dis[i] = inf;
+    dis[0] = 0;
+    for (int _ = 0; _ < N - 1; _++) {
+        for (int i = 0; i < M; i++) {
+            int u = get<0>(edges[i]), v = get<1>(edges[i]), w = get<2>(edges[i]);
+            dis[v] = min(dis[v], dis[u] + w);
+        }
+    }
+    for (int i = 0; i < M; i++) {
+        int u = get<0>(edges[i]), v = get<1>(edges[i]), w = get<2>(edges[i]);
+        if (dis[u] + w < dis[v]) {
+            return true;
+        }
+    }
+    return false;
+}
