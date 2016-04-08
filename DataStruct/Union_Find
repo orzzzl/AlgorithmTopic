@@ -38,7 +38,7 @@ public:
 	return size [findParent (i)];
     }
 
-    int unionSet (int i, int j) {
+    int connect (int i, int j) {
 	if (isSameSet (i, j))    return -1;
 	int x = findParent (i);
 	int y = findParent (j);
