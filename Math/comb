@@ -1,0 +1,19 @@
+#define mod 1000000007
+#define MX 1000010
+
+ll F[MX], Finv[MX], inv[MX];
+
+void pre() {
+	int i;
+	inv[1] = 1;
+	for (i = 2; i < MX; i++) inv[i] = inv[mod % i] * (mod - mod / i) % mod;
+	F[0] = Finv[0] = 1;
+	for (i = 1; i < MX; i++) {
+		F[i] = F[i - 1] * i % mod;
+		Finv[i] = Finv[i - 1] * inv[i] % mod;
+	}
+}
+
+ll comb(int N, int K) {
+	return F[N] * Finv[K] % mod * Finv[N - K] % mod;
+}
