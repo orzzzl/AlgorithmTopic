@@ -7,7 +7,7 @@ void pre() {
 	for (int i = 2; i <= mx; i++) {
 		if (p[i]) {
 			primes.push_back(i);
-			for (int j = i + i; j <= mx; j += i) p[j] = false;
+			for (int j = i * i; j <= mx; j += i) p[j] = false;
 		}
 	}
 }
