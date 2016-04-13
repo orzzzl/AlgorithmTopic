@@ -1,0 +1,33 @@
+vector<int> woman[505];
+vector<int> man[505];
+int N;
+
+vector<int> stableMatching() {
+    vector<int> man_matching(N + 1, -1);
+    vector<int> freewoman;
+    vector<vector<int> > preference(N + 1, vector<int>(N + 1));
+    vector<int> proposed(N + 1, 0);
+    for (int i = 1; i <= N; i++) {
+        freewoman.push_back(i);
+        for (int j = 0; j < N; j++) {
+            int thiswoman = man[i][j];
+            preference[i][thiswoman] = j;
+        }
+    }
+    int cnt = freewoman.size();
+    while (cnt > 0) {
+        int curwoman = freewoman[cnt - 1];
+        int thisman = woman[curwoman][proposed[curwoman]++];
+        int prewoman = man_matching[thisman];
+        if (prewoman == -1) {
+            cnt--;
+            man_matching[thisman] = curwoman;
+            continue;
+        }
+        if (preference[thisman][curwoman] < preference[thisman][prewoman]) {
+            freewoman[cnt - 1] = prewoman;
+            man_matching[thisman] = curwoman;
+        }
+    }
+    return man_matching;
+}
