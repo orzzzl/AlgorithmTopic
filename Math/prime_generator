@@ -1,4 +1,4 @@
-const int mx = 1000000;
+const int mx = 1000001;
 vector<int> primes;
 bool p[mx + 5];
 
@@ -7,6 +7,8 @@ void pre() {
 	for (int i = 2; i <= mx; i++) {
 		if (p[i]) {
 			primes.push_back(i);
+			ll start = (ll)i * i;
+			if (start > mx) continue;
 			for (int j = i * i; j <= mx; j += i) p[j] = false;
 		}
 	}
