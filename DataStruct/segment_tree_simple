@@ -1,14 +1,18 @@
-const int mx = 1000005;
-string s;
-int N;
+const int mx = 100005;
+char s[mx];
+int N, M;
 
 struct seg {
 	int start, end;
-	seg() {}
+	seg() {
+
+	}
 };
 
 inline seg merge(const seg &lft, const seg &rgt) {
+	seg ret;
 
+	return ret;
 }
 
 seg x[4 * mx];
@@ -28,11 +32,28 @@ void build(int pos, int start, int end) {
 	x[pos].end = end;
 }
 
+void modify(int pos, int idx, int val) {
+	int seg_start = x[pos].start, seg_end = x[pos].end;
+
+	//invalid input
+	if (idx < seg_start || idx > seg_end) return;
+
+	// found
+	if (idx == seg_start && idx == seg_end) {
+		// do something here
+		return;
+	}
+	int mid = (seg_start + seg_end) / 2;
+	if (idx <= mid) modify(pos * 2, idx, val);
+	if (idx > mid) modify(pos * 2 + 1, idx, val);
+	x[pos] = merge(x[pos * 2], x[pos * 2 + 1]);
+}
+
 seg query(int pos, int start, int end) {
 	int seg_start = x[pos].start, seg_end = x[pos].end;
 
 	//invalid input
-	if (start > end || end < seg_start || start > seg_end) return seg(0, 0, 0);
+	if (start > end || end < seg_start || start > seg_end) return seg();
 
 	// found
 	if (start == seg_start && end == seg_end) return x[pos];
