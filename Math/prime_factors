@@ -1,0 +1,18 @@
+const int mx = 1000001;
+vector<pair<int, int> > factors[mx + 5];
+
+void pre() {
+	for (int i = 2; i <= mx; i++) {
+		if (factors[i].empty()) {
+			for (int j = i + i; j <= mx; j += i) {
+				int cnt = 0;
+				int n = j;
+				while (n % i == 0) {
+					cnt++;
+					n /= i;
+				}
+				factors[j].push_back(make_pair(i, cnt));
+			}
+		}
+	}
+}
