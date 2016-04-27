@@ -11,13 +11,12 @@ struct line {
     line(double x1, double y1, double x2, double y2) {
         double dx = x1 - x2;
         double dy = y1 - y2;
-        dx = dabs(dx);
-        dy = dabs(dy);
-        if (dx < eps) {
+
+        if (dabs(dx) < eps) {
             C = -x1;
             A = 1;
             B = 0;
-        } else if (dy < eps) {
+        } else if (dabs(dy) < eps) {
             A = 0;
             B = 1;
             C = -y1;
