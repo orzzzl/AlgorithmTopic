@@ -1,0 +1,29 @@
+struct vct {
+	double x, y;
+
+	vct(double _x = 0, double _y = 0) {
+		x = _x; y = _y;
+	}
+
+	//|A| * |B| * cos(x)
+	double dot(const vct &other) {
+		return x * other.x + y * other.y;
+	}
+
+	//|A| * |B| * sin(x)
+	double cross(const vct &other) {
+		return fabs(x * other.y - y * other.x);
+	}
+
+	vct plus(const vct &other) {
+		return vct(x + other.x, y + other.y);
+	}
+
+	vct minus(const vct &other) {
+		return vct(x - other.x, y - other.y);
+	}
+
+	double length() {
+		return sqrt(x * x + y * y);
+	}
+};
