@@ -1,0 +1,25 @@
+const int ALPHABET_SIZE = 26;
+
+struct TrieNode {
+    vector<TrieNode*> children;
+    bool is_terminal;
+
+    TrieNode() {
+        children = vector<TrieNode*>(ALPHABET_SIZE, nullptr);
+        is_terminal = false;
+    }
+};
+
+void add_word_to_trie(TrieNode* root, const string& word, const vector<vector<int>>& lcp) {
+    TrieNode* node = root;
+    for (int i = 0; i < word.length(); i++) {
+        int c = word[i] - 'a';
+        if (!node->children[c]) {
+            node->children[c] = new TrieNode();
+        }
+        node = node->children[c];
+        if (lcp[i][word.length() - 1] == word.length() - i) {
+            node->is_terminal = true;
+        }
+    }
+}
